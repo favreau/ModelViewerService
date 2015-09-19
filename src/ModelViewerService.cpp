@@ -62,7 +62,7 @@ void display()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-    gluLookAt( 0,0,10, 0,0,0, 0,1,0);
+    gluLookAt( 0,0,30, 0,0,0, 0,1,0);
     glPushMatrix();
     glRotatef(g_rotation,0,1,0);
     g_rotation += 0.5f;
@@ -73,23 +73,31 @@ void display()
 
 void initialize () 
 {
+    glMatrixMode(GL_PROJECTION);
     glViewport(0, 0, win.width, win.height);
     GLfloat aspect = (GLfloat) win.width / win.height;
-    glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(win.field_of_view_angle, aspect, win.z_near, win.z_far);
+
     glMatrixMode(GL_MODELVIEW);
-    glClearColor( 0.1f, 0.1f, 0.1f, 0.5f );
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);               // Set background color to black and opaque
+
+    glDepthMask(GL_TRUE);
+    glClearDepth(1.0f);                                 // Set background depth to farthest
+    glEnable(GL_DEPTH_TEST);                            // Enable depth testing for z-culling
+    glDepthFunc(GL_LEQUAL);                             // Set the type of depth-test
+    glShadeModel(GL_SMOOTH);                            // Enable smooth shading
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Nice perspective corrections
 
     GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
     GLfloat diffuse[] = { 0.6, 0.6, 0.6, 1 };
     GLfloat specular[] = { 0.7, 0.7, 0.3, 1 };
-    glShadeModel( GL_SMOOTH );
     glLightfv( GL_FRONT, GL_DIFFUSE, diffuse );
     glLightfv( GL_FRONT, GL_SPECULAR, specular );
     glLightfv( GL_LIGHT0, GL_POSITION, light_position);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
+    glEnable(GL_COLOR_MATERIAL);
 }
 
 void keyboard ( unsigned char key, int, int )
@@ -110,7 +118,7 @@ int main(int argc, char **argv)
     win.height = 480;
     win.title = "OBJ Viewer Service";
     win.field_of_view_angle = 45;
-    win.z_near = 0.0f;
+    win.z_near = 1.0f;
     win.z_far = 500.0f;
 
     // initialize and run program
@@ -122,7 +130,7 @@ int main(int argc, char **argv)
     glutIdleFunc( display );
     glutKeyboardFunc( keyboard );
     initialize();
-    obj.loadFromFile("../models", "cow.obj");
+    obj.loadFromFile("../models", "neuron.obj");
     glutMainLoop();
     return 0;
 }

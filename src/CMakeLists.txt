@@ -11,9 +11,15 @@ set(MODELVIEWERSERVICE_HEADERS
 
 set(MODELVIEWERSERVICE_LINK_LIBRARIES
   ${GLUT_LIBRARIES}
-  GL
-  GLU
   assimp
 )
+
+if(!APPLE)
+  list(APPEND MODELVIEWERSERVICE_LINK_LIBRARIES
+    GL
+    GLU
+  )
+endif(APPLE)
+
 
 common_application(ModelViewerService)

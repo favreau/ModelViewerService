@@ -10,6 +10,8 @@
  *
  */
 
+#include <vector>
+
 #ifndef ModelLoader_H
 #define ModelLoader_H
 
@@ -27,11 +29,9 @@ public:
     void draw();
 
 private:
-    float* faces_;
-    float* facesNormals_;
-    float* vertices_;
-    long TotalConnectedTriangles_;
-    long TotalConnectedPoints_;
+    std::vector<float> faces_;
+    std::vector<float> facesNormals_;
+    std::vector<float> vertices_;
 };
 
 #endif // ModelLoader_H
