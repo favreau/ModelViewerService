@@ -40,7 +40,7 @@ ModelLoader::ModelLoader()
 ModelLoader::~ModelLoader()
 {
     delete faces_;
-    delete normals_;
+    delete facesNormals_;
     delete vertices_;
 }
 
@@ -81,8 +81,8 @@ bool ModelLoader::loadFromFile(const std::string& folder, const std::string& fil
         nbFaces += mesh->mNumFaces;
     }
     vertices_ = new float[3*nbVertices];
-    normals_ = new float[3*nbVertices];
     faces_ = new float[9*nbFaces];
+    facesNormals_ = new float[9*nbFaces];
 
     for (size_t m=0; m<scene->mNumMeshes; ++m)
     {
@@ -104,14 +104,6 @@ bool ModelLoader::loadFromFile(const std::string& folder, const std::string& fil
             bbox[1][1] = max(bbox[1][1], v.y);
             bbox[1][2] = max(bbox[1][2], v.z);
 
-            if( mesh->mNormals )
-            {
-                v = mesh->mNormals[i];
-                normals_[TotalConnectedPoints_] = v.x;
-                normals_[TotalConnectedPoints_+1] = v.y;
-                normals_[TotalConnectedPoints_+2] = v.z;
-            }
-
             TotalConnectedPoints_ += POINTS_PER_VERTEX;
         }
 
@@ -125,16 +117,26 @@ bool ModelLoader::loadFromFile(const std::string& folder, const std::string& fil
                         mesh->mVertices[mesh->mFaces[f].mIndices[1]][c];
                 faces_[(TotalConnectedTriangles_ + f)*9 + 6 + c] =
                         mesh->mVertices[mesh->mFaces[f].mIndices[2]][c];
+
+                if( mesh->mNormals )
+                {
+                    facesNormals_[(TotalConnectedTriangles_ + f)*9 + c    ] =
+                            mesh->mNormals[mesh->mFaces[f].mIndices[0]][c];
+                    facesNormals_[(TotalConnectedTriangles_ + f)*9 + 3 + c] =
+                            mesh->mNormals[mesh->mFaces[f].mIndices[1]][c];
+                    facesNormals_[(TotalConnectedTriangles_ + f)*9 + 6 + c] =
+                            mesh->mNormals[mesh->mFaces[f].mIndices[2]][c];
+
+                }
             }
         }
-        TotalConnectedTriangles_ += mesh->mNumFaces;
+        TotalConnectedTriangles_ += mesh->mNumFaces*3;
     }
 
     std::cout << "Bounding box ("
               << bbox[0][0] << "," << bbox[0][1] << "," << bbox[0][2] << "),("
                                                                       << bbox[1][0] << "," << bbox[1][1] << "," << bbox[1][2] << ")"
                                                                                                                               << std::endl;
-
     std::cout << "Loaded " << nbVertices << " vertices and "
               << TotalConnectedTriangles_ << " faces" << std::endl;
 
@@ -146,8 +148,8 @@ void ModelLoader::draw()
 
     glEnableClientState(GL_VERTEX_ARRAY);						// Enable vertex arrays
     glEnableClientState(GL_NORMAL_ARRAY);						// Enable normal arrays
-    glVertexPointer(3,GL_FLOAT, 0,faces_);				// Vertex Pointer to triangle array
-    glNormalPointer(GL_FLOAT, 0, normals_);						// Normal pointer to normal array
+    glVertexPointer(3, GL_FLOAT, 0, faces_);				// Vertex Pointer to triangle array
+    glNormalPointer(GL_FLOAT, 0, facesNormals_);						// Normal pointer to normal array
     glDrawArrays(GL_TRIANGLES, 0, TotalConnectedTriangles_);		// Draw the triangles
     glDisableClientState(GL_VERTEX_ARRAY);						// Disable vertex arrays
     glDisableClientState(GL_NORMAL_ARRAY);						// Disable normal arrays
