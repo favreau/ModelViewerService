@@ -10,7 +10,11 @@
  *
  */
 
-#include <GL/gl.h>
+#ifdef __APPLE__
+#  include "GLUT/glut.h"
+#else
+#  include "GL/glut.h"
+#endif
 #include <iostream>
 #include <cmath>
 #include <string>
@@ -43,6 +47,7 @@ ModelLoader::~ModelLoader()
 
 bool ModelLoader::loadFromFile(const std::string& folder, const std::string& filename)
 {
+    std::cout << "Loading " << folder << "/" << filename << std::endl;
     float bbox[2][3] =
     {
         {  inf,  inf,  inf },
@@ -52,7 +57,7 @@ bool ModelLoader::loadFromFile(const std::string& folder, const std::string& fil
     Assimp::Importer importer;
     const aiScene *scene = NULL;
     std::string fullname = folder + "/" + filename;
-    scene = importer.ReadFile( fullname.c_str() , aiProcessPreset_TargetRealtime_Fast);
+    scene = importer.ReadFile( fullname.c_str() , aiProcessPreset_TargetRealtime_MaxQuality);
     if (!scene)
     {
         std::cerr << "Error parsing " << fullname.c_str() << ": " <<

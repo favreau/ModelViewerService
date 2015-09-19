@@ -21,7 +21,7 @@ if(APPLE)
   set(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "OSX Architectures" FORCE)
 endif()
 
-set(BRAYNS_DESCRIPTION "Simple 3D Model Viewer exposing ZeroEQ event for remote access")
+set(MODELVIEWERSERVICE_DESCRIPTION "Simple 3D Model Viewer exposing ZeroEQ event for remote access")
 
 common_package(GLUT REQUIRED SYSTEM)
 common_package(OpenGL REQUIRED)
@@ -31,6 +31,10 @@ common_package_post()
 # ------------------------------------------------------------------------------
 # Applications and libraries
 # ------------------------------------------------------------------------------
+
+if(APPLE)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework OpenGL -Wno-narrowing -Wno-deprecated-declarations")
+endif()
 
 add_subdirectory(src)
 include(PackageConfig)

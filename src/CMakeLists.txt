@@ -10,10 +10,8 @@ set(MODELVIEWERSERVICE_HEADERS
 )
 
 set(MODELVIEWERSERVICE_LINK_LIBRARIES
+  ${GLUT_LIBRARIES}
   assimp
-  GL
-  GLU
-  glut
 )
 
 common_application(ModelViewerService)

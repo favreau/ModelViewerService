@@ -14,9 +14,11 @@
 #include <fstream>
 #include <stdio.h>
 #include <string.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glut.h>
+#ifdef __APPLE__
+#  include "GLUT/glut.h"
+#else
+#  include "GL/glut.h"
+#endif
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -60,16 +62,14 @@ void display()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-    gluLookAt( 0,2,10, 0,0,0, 0,1,0);
+    gluLookAt( 0,0,5, 0,0,0, 0,1,0);
     glPushMatrix();
     glRotatef(g_rotation,0,1,0);
-    //glRotatef(90,0,1,0);
     g_rotation += 0.5f;
     obj.draw();
     glPopMatrix();
     glutSwapBuffers();
 }
-
 
 void initialize () 
 {
