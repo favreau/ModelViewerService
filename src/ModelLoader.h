@@ -27,8 +27,8 @@ public:
     void draw();
 
 private:
-    float* normals_;
     float* faces_;
+    float* facesNormals_;
     float* vertices_;
     long TotalConnectedTriangles_;
     long TotalConnectedPoints_;
