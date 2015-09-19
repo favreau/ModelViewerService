@@ -16,4 +16,12 @@ set(MODELVIEWERSERVICE_LINK_LIBRARIES
   assimp
 )
 
+if(!APPLE)
+  list(APPEND MODELVIEWERSERVICE_LINK_LIBRARIES
+    GL
+    GLU
+  )
+endif(APPLE)
+
+
 common_application(ModelViewerService)
