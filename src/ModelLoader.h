@@ -10,6 +10,8 @@
  *
  */
 
+#include <vector>
+
 #ifndef ModelLoader_H
 #define ModelLoader_H
 
